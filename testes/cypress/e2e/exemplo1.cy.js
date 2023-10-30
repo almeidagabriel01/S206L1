@@ -29,7 +29,7 @@ describe('Criando cenário de teste para o site globalsqa', () => {
   })
 
 
-  it('Caso de teste: Realizando login com sucesso', () => {
+  it.skip('Caso de teste: Realizando login com sucesso', () => {
 
     let info = criarUsuario()
     cy.get('#username').type(info[0])
@@ -39,6 +39,28 @@ describe('Criando cenário de teste para o site globalsqa', () => {
   })
 
 
+  it.skip('Caso de teste: Tentando realizar login com usuário inexistente', () => {
+
+    let info = gerarUsuarioInexistente()
+    cy.visit('https://globalsqa.com/angularJs-protractor/registration-login-example/#/login')
+    cy.get('#username').type(info[0])
+    cy.get('#password').type(info[1])
+    cy.get('.btn-primary').click()
+    cy.get('.ng-binding').should('contain.text', 'Username or password is incorrect')
+    
+  })
+
+  it('Caso de teste: Realizando logout com sucesso', () => {
+
+    let info = criarUsuario()
+    cy.get('#username').type(info[0])
+    cy.get('#password').type(info[1])
+    cy.get('.btn-primary').click()
+    cy.get('h1.ng-binding').should('contain.text', info[0])
+    cy.get('.btn').click()
+    cy.get('h2').should('have.text', 'Login')
+
+  })
 
 })
 
@@ -63,3 +85,10 @@ describe('Criando cenário de teste para o site globalsqa', () => {
     return userInfo
   }
 
+  function gerarUsuarioInexistente(){
+
+    let user = Math.random().toString(36).substring(2, 10)
+    let senha = Math.random().toString(36).substring(2, 10)
+
+    return [user, senha]
+  }
